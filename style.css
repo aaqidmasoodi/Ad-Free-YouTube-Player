@@ -8,7 +8,8 @@
 }
 
 body {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    
+  background-color: #000000;
   color: var(--text-primary);
   height: 100vh;
   overflow: hidden;
@@ -16,6 +17,34 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background-color: #000000;
+  color: #ffffff;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Ensure safe area is filled */
+.app-container {
+display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  min-height: 100vh;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 
 .app-container {
   display: flex;
