@@ -1,0 +1,19 @@
+[
+    {
+        "id": "classical_arabic",
+        "title": "Classical Arabic",
+        "description": "Classical Arabic Love Songs.",
+        "thumbnail": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/fd/37/63/fd376369-44ee-02ee-21bf-1f6a8ae3f159/22UMGIM30217.rgb.jpg/600x600bf-60.jpg",
+        "videoCount": 17,
+        "fileName": "classical_arabic.json"
+    },
+    {
+        "id": "aaqids_favourites",
+        "title": "Aaqid's Favourites",
+        "description": "Aaqid's All time Favourite Songs.",
+        "thumbnail": "https://c0.wallpaperflare.com/preview/71/436/956/sunset-heart-hands-love-thumbnail.jpg",
+        "videoCount": 17,
+        "fileName": "aaqids_favourites.json"
+    }
+
+]

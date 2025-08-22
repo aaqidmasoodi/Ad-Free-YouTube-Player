@@ -7,7 +7,6 @@
   <meta name="description" content="Ad Free Player - Create YouTube playlists without ads">
 
   <!-- PWA Meta Tags -->
-   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Ad Free Player">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,11 +14,9 @@
   <title>🎵 Ad Free YouTube Player</title>
 
   <!-- Bootstrap 5 CSS -->
-  <!-- FIXED: Removed extra spaces -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Bootstrap Icons -->
-  <!-- FIXED: Removed extra space -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
   <!-- PWA Manifest -->
@@ -37,14 +34,21 @@
 </head>
 <body>
   <div class="app-container">
+    <!-- Header -->
     <header class="app-header">
       <div class="container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center">
           <h1 class="app-title mb-0">
             <i class="bi bi-play-btn-fill me-2"></i>
-            Ad Free YouTube Player
+            Ad Free Player
           </h1>
           <div>
+            <!-- --- NEW: Link to Playlists Page --- -->
+            <a href="playlists.html" class="btn btn-sm btn-outline-info me-2" title="Browse Pre-made Playlists">
+                <i class="bi bi-collection-playlist me-1"></i> Explore Playlists
+            </a>
+            <!-- --- END NEW --- -->
+
             <button id="importPlaylistBtn" class="btn btn-sm btn-outline-info me-2" title="Import Playlist">
                 <i class="bi bi-box-arrow-in-down"></i> Import
             </button>
@@ -72,10 +76,9 @@
 
       <div id="videoInfo" class="video-info d-none">
         <div class="d-flex justify-content-between align-items-center">
-          <div>
+          <div class="text-truncate">
             <strong>Now Playing:</strong> <br>
-            <!-- FULL TITLE DISPLAY -->
-            <span id="currentVideoInfo" class="text-truncate d-inline-block w-100"></span>
+            <span id="currentVideoInfo" class="text-truncate d-inline-block" style="max-width: 200px;"></span>
           </div>
           <span class="badge bg-primary">
             <i class="bi bi-collection-play"></i>
@@ -117,7 +120,6 @@
     <footer class="app-footer">
       <div class="container-fluid">
         <div class="footer-content">
-          <!-- FIXED: Removed extra space -->
           Designed by <a href="https://aaqidmasoodi.com" target="_blank" class="footer-link">Aaqid Masoodi</a>
           | Copyright © <span id="currentYear"></span>
         </div>
@@ -126,8 +128,33 @@
   </div>
 
   <!-- Bootstrap JS Bundle with Popper -->
-  <!-- FIXED: Removed extra space -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // --- Playlist Loader Script (Place RIGHT AFTER opening <body> tag) ---
+    // Check for a playlist to load from the Playlists page
+    (function() {
+        const playlistToLoadJson = localStorage.getItem('ytPlaylistToLoad');
+        if (playlistToLoadJson) {
+            try {
+                const playlistToLoad = JSON.parse(playlistToLoadJson);
+                if (Array.isArray(playlistToLoad) && playlistToLoad.length > 0) {
+                    // Clear existing playlist
+                    localStorage.removeItem('ytPlaylist');
+                    // Save the new playlist
+                    localStorage.setItem('ytPlaylist', JSON.stringify(playlistToLoad));
+                    console.log("Playlist loaded from Playlists page.");
+                }
+            } catch (e) {
+                console.error("Error parsing playlist from Playlists page:", e);
+            } finally {
+                // Always remove the temporary item
+                localStorage.removeItem('ytPlaylistToLoad');
+            }
+        }
+    })();
+    // --- End of playlist loader script ---
+  </script>
 
   <!-- Your Custom Script -->
   <script src="script.js" type="module"></script> <!-- Using type="module" is good practice -->
