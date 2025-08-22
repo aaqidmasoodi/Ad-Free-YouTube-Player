@@ -351,3 +351,15 @@ body {
     white-space: normal; /* Allow wrapping */
     word-break: break-word; /* Break long words */
 }
+
+
+
+@media (max-width: 480px) {
+  .app-title {
+    display: none;
+  }
+
+  #videoInfo {
+    display: none;
+  }
+}
