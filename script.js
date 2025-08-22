@@ -5,6 +5,8 @@ let player;
 let playerReady = false;
 let playerPlaceholder; // Cache placeholder reference
 
+
+
 // --- Utility Functions ---
 
 function updatePlaylistCount() {
@@ -62,8 +64,8 @@ function extractVideoId(url) {
 
 // Load YouTube API (FIXED: Removed extra space in src)
 function loadYouTubeAPI() {
-  // FIXED: Removed extra space
   const tag = document.createElement('script');
+  // FIXED: Removed the trailing space
   tag.src = "https://www.youtube.com/iframe_api"; // <-- CORRECTED LINE
   const firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -351,8 +353,10 @@ function renderPlaylist() {
     list.appendChild(li);
   });
 
-  // Re-attach event listeners after re-rendering
+  // --- CRITICAL: Re-attach event listeners after re-rendering ---
   attachPlaylistEventListeners();
+  console.log("DEBUG: Playlist re-rendered and event listeners re-attached.");
+  // --- END CRITICAL ---
 }
 
 function attachPlaylistEventListeners() {
@@ -361,30 +365,65 @@ function attachPlaylistEventListeners() {
     if (playlistContent) {
         playlistContent.removeEventListener('click', handlePlaylistClick); // Remove old listener if any
         playlistContent.addEventListener('click', handlePlaylistClick);
+        console.log("DEBUG: Playlist event listener attached/reattached.");
+    } else {
+        console.warn("WARNING: Could not find .playlist-content to attach listener.");
     }
 }
 
+// --- COMPLETELY REWRITTEN handlePlaylistClick for maximum robustness and debugging ---
 function handlePlaylistClick(event) {
-     // Handle Play Button Click
-    const playBtn = event.target.closest('.play-video-btn');
-    if (playBtn) {
-        const index = parseInt(playBtn.getAttribute('data-index'), 10);
-        if (!isNaN(index)) {
-            playVideoAtIndex(index);
-        }
-        return; // Stop propagation if handled
-    }
+    console.log("DEBUG: Global playlist container clicked. Event target:", event.target);
 
-    // Handle Remove Button Click
+    // --- HANDLE REMOVE BUTTON CLICK ---
+    // Check if the clicked element OR any of its parents has the class 'remove-video-btn'
     const removeBtn = event.target.closest('.remove-video-btn');
     if (removeBtn) {
-        event.stopPropagation(); // Prevent triggering play
-        const index = parseInt(removeBtn.getAttribute('data-index'), 10);
+        console.log("DEBUG: Remove button identified via closest():", removeBtn);
+        event.stopPropagation(); // Stop the event from bubbling up (prevents play action)
+        const indexAttr = removeBtn.dataset.index; // Use dataset for cleaner access
+        console.log("DEBUG: Index attribute from button dataset:", indexAttr);
+        const index = parseInt(indexAttr, 10);
         if (!isNaN(index)) {
+            console.log("SUCCESS: Removing video at index:", index);
             removeVideo(index);
+        } else {
+            console.error("ERROR: Could not parse index for removal. Attribute value:", indexAttr);
+            alert("Sorry, there was an error removing that video.");
         }
+        return; // Stop processing after handling remove
+    }
+
+    // --- HANDLE PLAY ITEM CLICK (the main area) ---
+    // Check if the clicked element OR any of its parents has the class 'play-video-btn'
+    const playArea = event.target.closest('.play-video-btn');
+    if (playArea) {
+        console.log("DEBUG: Play area identified via closest():", playArea);
+        const indexAttr = playArea.dataset.index; // Use dataset
+        console.log("DEBUG: Index attribute from play area dataset:", indexAttr);
+        const index = parseInt(indexAttr, 10);
+        if (!isNaN(index)) {
+            console.log("SUCCESS: Playing video at index:", index);
+            playVideoAtIndex(index);
+        } else {
+            console.error("ERROR: Could not parse index for playing. Attribute value:", indexAttr);
+            // Don't alert here as it might interfere with button clicks
+        }
+        return; // Stop processing after handling play
+    }
+
+    // --- HANDLE CLICKS ON OTHER PARTS OF THE PLAYLIST ITEM (Optional Debug Info) ---
+    // If neither the remove button nor the main play area was clicked directly,
+    // but the click was somewhere else inside a playlist item.
+    const playlistItem = event.target.closest('.playlist-item');
+    if (playlistItem) {
+        console.log("DEBUG: Clicked inside a playlist item but not on a recognized interactive element.");
+        console.log("       Click target was:", event.target);
+        console.log("       Playlist item was:", playlistItem);
+        // Do nothing specific, but log for debugging unexpected clicks
     }
 }
+// --- END REWRITTEN ---
 
 
 function addVideo() {
@@ -444,6 +483,7 @@ function addVideo() {
 
 function removeVideo(index) {
   if (index < 0 || index >= playlist.length) return;
+  console.log("EXECUTING: removeVideo called for index:", index);
 
   playlist.splice(index, 1);
   savePlaylistToLocalStorage();
@@ -662,6 +702,7 @@ function fetchPlaylistTitles() {
 // --- Initialization and Event Listeners ---
 
 function init() {
+    console.log("DEBUG: Initializing app...");
     // Set current year in footer
     const currentYearElement = document.getElementById('currentYear');
     if (currentYearElement) {
@@ -687,7 +728,7 @@ function init() {
     // Load playlist on startup
     updatePlaylistCount();
     updateExportButtonVisibility();
-    renderPlaylist();
+    renderPlaylist(); // This will also call attachPlaylistEventListeners
     if (playlist.length > 0) {
         initializePlayer(playlist[0].id);
         // onPlayerReady will update UI
@@ -785,10 +826,11 @@ function init() {
         });
     }
 
-    // Initial attachment of playlist event listeners
+    // Initial attachment of playlist event listeners (redundant as renderPlaylist does it, but safe)
     attachPlaylistEventListeners();
+    console.log("DEBUG: Initial event listeners attached.");
 
-    console.log('Ad Free Player - PWA with Import/Export (Issues Fixed)');
+    console.log('Ad Free Player - PWA with Import/Export (Delete Button Fix Applied)');
 }
 
 // Start the app when the DOM is fully loaded
