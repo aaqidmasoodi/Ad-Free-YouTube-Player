@@ -31,11 +31,19 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png">
 
   <style>
+    :root {
+        --text-secondary: #6c757d; /* Example color, adjust if needed */
+    }
+
     /* Specific styles for the playlists page */
     .playlist-card {
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 100%;
+        max-height: 400px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px; /* Optional: ensure consistent rounding */
+        overflow: hidden; /* Prevent content from spilling */
     }
     .playlist-card:hover {
         transform: translateY(-5px);
@@ -113,14 +121,77 @@
     }
     /* --- END FIXED ICON PLACEMENT STYLES --- */
 
+    /* --- SCROLLABLE PLAYLIST GRID STYLES --- */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent body scroll */
+    }
+
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh; /* Full viewport height */
+        overflow: hidden; /* Prevent body scroll */
+    }
+
+    .app-header, .app-footer {
+        flex-shrink: 0;
+    }
+
+    .app-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0;
+        overflow: hidden; /* Prevent content scroll */
+    }
+
+    /* Scrollable playlists grid container */
+    #playlistsGrid {
+        flex: 1;
+        overflow-y: auto; /* Enables vertical scrolling inside grid */
+        /* max-height: calc(100vh - 120px); */ /* Optional: limit max height */
+        padding-right: 8px; /* Optional: better scrollbar spacing */
+        padding-left: 8px; /* Optional: balance padding */
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+    /* Webkit scrollbar styling (optional) */
+    #playlistsGrid::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #playlistsGrid::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    #playlistsGrid::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    #playlistsGrid::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Hide status message when not needed */
+    #statusMessage {
+        max-width: 80%;
+        margin: 1rem auto;
+    }
+    /* --- END SCROLLABLE STYLES --- */
 
   </style>
 </head>
 <body>
   <div class="app-container">
     <!-- Back Button (Fixed) -->
-    <a href="index.html" class="btn btn-sm btn-outline-light back-to-player" title="Back to Player">
-        <i class="bi bi-arrow-left-circle"></i> Player
+    <a href="index.html" class="btn btn-sm btn-danger back-to-player" title="Back to Player">
+        <i class="bi bi-arrow-left-circle"></i> Back to Player
     </a>
 
     <!-- Header -->
@@ -135,7 +206,7 @@
       </div>
     </header>
 
-    <main class="app-content">
+    <main class="app-content flex-fill">
       <!-- Loading/Status Message -->
       <div id="statusMessage" class="alert alert-info text-center" role="alert">
         Loading playlists...
