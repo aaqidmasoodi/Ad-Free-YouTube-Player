@@ -139,7 +139,7 @@ display: flex;
   border-radius: 12px;
   overflow: hidden;
   background: #000;
-  height: 220px;
+  height: 120px;
   position: relative; /* Needed for absolute positioning of placeholder */
 }
 
