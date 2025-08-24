@@ -164,8 +164,8 @@ function createPlayer(videoId) {
       'showinfo': 0, // Deprecated, but doesn't hurt
       'modestbranding': 1,
       'rel': 0,
-      'iv_load_policy': 3 // Disable annotations
-      // Removed 'playsinline' as it's less critical
+      'iv_load_policy': 3, // Disable annotations
+      'playsinline': 1 // play inline on iOS
     },
     events: {
       'onReady': onPlayerReady,
